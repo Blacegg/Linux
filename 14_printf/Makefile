@@ -54,7 +54,7 @@ VPATH			:= $(SRCDIRS)
 .PHONY: clean
 
 $(TARGET).bin : $(OBJS)
-	$(LD) -Timx6ul.lds $^ -o $(TARGET).elf
+	$(LD) -Timx6ul.lds -o $(TARGET).elf $^ $(LIBPATH)
 	$(OBJCOPY) -O binary -S $(TARGET).elf $@
 	$(OBJDUMP) -D -m arm $(TARGET).elf > $(TARGET).dis
 

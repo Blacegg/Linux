@@ -2,16 +2,16 @@
 
 void led_init(void)
 {
-    /* 1¡¢³õÊ¼»¯ IO ¸´ÓÃ */
+    /* 1ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ IO ï¿½ï¿½ï¿½ï¿½ */
     IOMUXC_SetPinMux(IOMUXC_GPIO1_IO03_GPIO1_IO03, 0);
 
-    /* 2¡¢¡¢ÅäÖÃ GPIO1_IO03 µÄ IO ÊôÐÔ */
+    /* 2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GPIO1_IO03 ï¿½ï¿½ IO ï¿½ï¿½ï¿½ï¿½ */
     IOMUXC_SetPinConfig(IOMUXC_GPIO1_IO03_GPIO1_IO03, 0X10B0);
 
-    //     /* 3¡¢³õÊ¼»¯ GPIO,GPIO1_IO03 ÉèÖÃÎªÊä³ö*/
+    //     /* 3ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ GPIO,GPIO1_IO03 ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½*/
     //     GPIO1->GDIR |= (1 << 3);
 
-    //     /* 4¡¢ÉèÖÃ GPIO1_IO03 Êä³öµÍµçÆ½£¬´ò¿ª LED0*/
+    //     /* 4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GPIO1_IO03 ï¿½ï¿½ï¿½ï¿½Íµï¿½Æ½ï¿½ï¿½ï¿½ï¿½ LED0*/
     //     GPIO1->DR &= ~(1 << 3);
     GPIO_Pin_Config_t led_config;
     led_config.Direction = kGPIO_DigitalOutput;
@@ -25,10 +25,10 @@ void led_switch(int led, int status)
     {
     case LED0:
         GPIO_PinWrite(GPIO1, 3, status);
-        // if (status == ON)
-        //     GPIO1->DR &= ~(1 << 3); /* ´ò¿ª LED0 */
-        // else if (status == OFF)
-        //     GPIO1->DR |= (1 << 3); /* ¹Ø±Õ LED0 */
+        //  if (status == ON)
+        //      GPIO1->DR &= ~(1 << 3); /* ï¿½ï¿½ LED0 */
+        //  else if (status == OFF)
+        //      GPIO1->DR |= (1 << 3); /* ï¿½Ø±ï¿½ LED0 */
         break;
     }
 }

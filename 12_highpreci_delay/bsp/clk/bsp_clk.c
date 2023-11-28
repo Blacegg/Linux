@@ -1,9 +1,9 @@
 #include "bsp_clk.h"
 
 /*
- * @description : Ê¹ÄÜ I.MX6U ËùÓÐÍâÉèÊ±ÖÓ
- * @param : ÎÞ
- * @return : ÎÞ
+ * @description : Ê¹ï¿½ï¿½ I.MX6U ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+ * @param : ï¿½ï¿½
+ * @return : ï¿½ï¿½
  */
 
 void clk_enable(void)
@@ -21,23 +21,23 @@ void clk_init(void)
 {
     int reg = 0;
 
-    /* ÉèÖÃÄÚºËÊ±ÖÓ£¬¼´ARM_PLL1 */
+    /* ï¿½ï¿½ï¿½ï¿½ï¿½Úºï¿½Ê±ï¿½Ó£ï¿½ï¿½ï¿½ARM_PLL1 */
     if ((((CCM->CCSR) >> 2) & 0X1) == 0)
     {
-        /* Ñ¡Ôñstep_clkµÄÊ±ÖÓÔ´ */
+        /* Ñ¡ï¿½ï¿½step_clkï¿½ï¿½Ê±ï¿½ï¿½Ô´ */
         CCM->CCSR &= ~(1 << 8);
-        /* ¸Ä±äARM_PLL1µÄÊ±ÖÓÀ´Ô´£¬¼´Ñ¡Ôñstep_clk */
+        /* ï¿½Ä±ï¿½ARM_PLL1ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½step_clk */
         CCM->CCSR |= (1 << 2);
     }
-    /* ÐÞ¸ÄPLL1µÄÊ±ÖÓÎª1056MHZ */
+    /* ï¿½Þ¸ï¿½PLL1ï¿½ï¿½Ê±ï¿½ï¿½Îª1056MHZ */
     CCM_ANALOG->PLL_ARM |= (1 << 13);
     CCM_ANALOG->PLL_ARM |= (88 << 0);
-    /* ÉèÖÃARM_PLL1¶þ·ÖÆµ */
+    /* ï¿½ï¿½ï¿½ï¿½ARM_PLL1ï¿½ï¿½ï¿½ï¿½Æµ */
     CCM->CACRR |= (1 << 0);
-    /* ÇÐ»»Ê±ÖÓÔ´ */
+    /* ï¿½Ð»ï¿½Ê±ï¿½ï¿½Ô´ */
     CCM->CCSR &= ~(1 << 2);
 
-    /* ÉèÖÃPLL2µÄ4Â·PFD */
+    /* ï¿½ï¿½ï¿½ï¿½PLL2ï¿½ï¿½4Â·PFD */
     reg = CCM_ANALOG->PFD_528;
     reg &= ~(0X3f3f3f3f);
     reg |= (32 << 24);
@@ -46,7 +46,7 @@ void clk_init(void)
     reg |= (27 << 0);
     CCM_ANALOG->PFD_528 = reg;
 
-    /* ÉèÖÃPLL3µÄ4Â·PFD */
+    /* ï¿½ï¿½ï¿½ï¿½PLL3ï¿½ï¿½4Â·PFD */
     reg = 0;
     reg = CCM_ANALOG->PFD_480;
     reg &= ~(0X3f3f3f3f);
@@ -56,24 +56,27 @@ void clk_init(void)
     reg |= (12 << 0);
     CCM_ANALOG->PFD_480 = reg;
 
-    /* ÉèÖÃAHBÊ±ÖÓ */
+    /* ï¿½ï¿½ï¿½ï¿½AHBÊ±ï¿½ï¿½ */
     CCM->CBCMR &= ~(3 << 18);
-    CCM->CBCMR |= (1 << 18); // ÉèÖÃpre_periph_clk_sel
+    CCM->CBCMR |= (1 << 18); // ï¿½ï¿½ï¿½ï¿½pre_periph_clk_sel
     CCM->CBCDR &= ~(1 << 25);
     while (((CCM->CDHIPR) >> 5) & 1)
     {
     };
+
+#if 0
     CCM->CBCDR &= ~(7 << 10);
     CCM->CBCDR |= (2 << 10);
     while (((CCM->CDHIPR) >> 1) & 1)
     {
     };
+#endif
 
-    /* ÉèÖÃIPGÊ±ÖÓ */
+    /* ï¿½ï¿½ï¿½ï¿½IPGÊ±ï¿½ï¿½ */
     CCM->CBCDR &= ~(3 << 8);
     CCM->CBCDR |= (1 << 8);
 
-    /* ÉèÖÃPERCLKÊ±ÖÓ */
+    /* ï¿½ï¿½ï¿½ï¿½PERCLKÊ±ï¿½ï¿½ */
     CCM->CSCMR1 &= ~(1 << 6);
     CCM->CSCMR1 &= ~(0X3F << 0);
 }

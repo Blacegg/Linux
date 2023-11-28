@@ -16,7 +16,7 @@ void UART_Init(void)
     UART1->UBIR = 71;
     UART1->UBMR = 3124;
 
-#if 1
+#if 0
 
     UART_SetBaudrate(UART1, 115200, 80000000);
 
@@ -55,6 +55,70 @@ void UART_SetBaudrate(UART_Type *base,
         divisor = denominator;
         denominator = numerator % denominator;
         numerator = divisor;
+    }
+    numerator = srcclock_hz / divisor;
+    denominator = (baudrate << 4) / divisor;
+
+    /* numerator ranges from 1 ~ 7 * 64k */
+    /* denominator ranges from 1 ~ 64k */
+    if ((numerator > (UART_UBIR_INC_MASK * 7)) || (denominator > UART_UBIR_INC_MASK))
+    {
+        uint32_t m = (numerator - 1) / (UART_UBIR_INC_MASK * 7) + 1;
+        uint32_t n = (denominator - 1) / UART_UBIR_INC_MASK + 1;
+        uint32_t max = m > n ? m : n;
+        numerator /= max;
+        denominator /= max;
+        if (0 == numerator)
+        {
+            numerator = 1;
+        }
+        if (0 == denominator)
+        {
+            denominator = 1;
+        }
+    }
+    divider = (numerator - 1) / UART_UBIR_INC_MASK + 1;
+
+    switch (divider)
+    {
+    case 1:
+        refFreqDiv = 0x05;
+        break;
+    case 2:
+        refFreqDiv = 0x04;
+        break;
+    case 3:
+        refFreqDiv = 0x03;
+        break;
+    case 4:
+        refFreqDiv = 0x02;
+        break;
+    case 5:
+        refFreqDiv = 0x01;
+        break;
+    case 6:
+        refFreqDiv = 0x00;
+        break;
+    case 7:
+        refFreqDiv = 0x06;
+        break;
+    default:
+        refFreqDiv = 0x05;
+        break;
+    }
+    /* Compare the difference between baudRate_Bps and calculated baud rate.
+     * Baud Rate = Ref Freq / (16 * (UBMR + 1)/(UBIR+1)).
+     * baudDiff = (srcClock_Hz/divider)/( 16 * ((numerator / divider)/ denominator).
+     */
+    tempNumerator = srcclock_hz;
+    tempDenominator = (numerator << 4);
+    divisor = 1;
+    /* get the approximately maximum divisor */
+    while (tempDenominator != 0)
+    {
+        divisor = tempDenominator;
+        tempDenominator = tempNumerator % tempDenominator;
+        tempNumerator = divisor;
     }
     tempNumerator = srcclock_hz / divisor;
     tempDenominator = (numerator << 4) / divisor;

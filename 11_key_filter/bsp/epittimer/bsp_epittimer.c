@@ -26,5 +26,5 @@ void EPIT_IrqHandler(void)
     {
         led_switch(LED0, state);
     }
-    EPIT1->SR &= ~(1 << 0);
+    EPIT1->SR |= (1 << 0);
 }

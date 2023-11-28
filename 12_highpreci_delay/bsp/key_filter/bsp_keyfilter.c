@@ -58,7 +58,7 @@ void FilterTimer_IrqHandler(void)
             beep_switch(state);
         }
     }
-    EPIT1->SR &= ~(1 << 0);
+    EPIT1->SR |= (1 << 0);
 }
 
 void GPIO1_16_31_IrqHandler(void)

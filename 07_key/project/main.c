@@ -7,8 +7,8 @@
 
 int main()
 {
+    int i = 0;
     int keyvalue = 0;
-    //int ledvalue = 0;
     unsigned char led_state = OFF;
     unsigned char beep_state = OFF;
     clk_enable();
@@ -21,13 +21,23 @@ int main()
         keyvalue = Key_GetValue();
         if (keyvalue)
         {
-            beep_state = !beep_state;
-            beep_switch(beep_state);
+            switch (keyvalue)
+            {
+            case KEY0_VALUE:
+                beep_state = !beep_state;
+                beep_switch(beep_state);
+                break;
+            }
         }
+        if (i >= 50)
+        {
+            led_state = !led_state;
+            led_switch(LED0, led_state);
+            i = 0;
+        }
+        i++;
 
-        led_state = !led_state;
-        led_switch(LED0, led_state);
-        delay(500);
+        delay(10);
     }
 
     return 0;

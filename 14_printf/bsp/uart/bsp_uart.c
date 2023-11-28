@@ -16,7 +16,7 @@ void UART_Init(void)
     UART1->UBIR = 71;
     UART1->UBMR = 3124;
 
-#if 1
+#if 0
 
     UART_SetBaudrate(UART1, 115200, 80000000);
 

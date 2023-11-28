@@ -1,37 +1,37 @@
 #include "bsp_beep.h"
 
 /*
- * @description : ³õÊ¼»¯·äÃùÆ÷¶ÔÓ¦µÄ IO
- * @param : ÎÞ
- * @return : ÎÞ
+ * @description : ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ IO
+ * @param : ï¿½ï¿½
+ * @return : ï¿½ï¿½
  */
 void beep_init(void)
 {
-    /* 1¡¢³õÊ¼»¯ IO ¸´ÓÃ£¬¸´ÓÃÎª GPIO5_IO01 */
+    /* 1ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ IO ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½Îª GPIO5_IO01 */
     IOMUXC_SetPinMux(IOMUXC_SNVS_SNVS_TAMPER1_GPIO5_IO01, 0);
-    /* 2¡¢ÅäÖÃ GPIO1_IO03 µÄ IO ÊôÐÔ */
+    /* 2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GPIO1_IO03 ï¿½ï¿½ IO ï¿½ï¿½ï¿½ï¿½ */
     IOMUXC_SetPinConfig(IOMUXC_SNVS_SNVS_TAMPER1_GPIO5_IO01, 0X10B0);
-    /* 3¡¢³õÊ¼»¯ GPIO,GPIO5_IO01 ÉèÖÃÎªÊä³ö */
+    /* 3ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ GPIO,GPIO5_IO01 ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½ï¿½ */
     GPIO5->GDIR |= (1 << 1);
-    /* 4¡¢ÉèÖÃ GPIO5_IO01 Êä³ö¸ßµçÆ½£¬¹Ø±Õ·äÃùÆ÷ */
+    /* 4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ GPIO5_IO01 ï¿½ï¿½ï¿½ï¿½ßµï¿½Æ½ï¿½ï¿½ï¿½Ø±Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ */
     GPIO5->DR |= (1 << 1);
 
     GPIO_Pin_Config_t beep_config;
     beep_config.Direction = kGPIO_DigitalOutput;
-    beep_config.OutputLogic = 0;
+    beep_config.OutputLogic = 1;
     GPIO_Init(GPIO5, 1, &beep_config);
 }
 
 /*
- * @description : ·äÃùÆ÷¿ØÖÆº¯Êý£¬¿ØÖÆ·äÃùÆ÷´ò¿ª»¹ÊÇ¹Ø±Õ
- * @param - status : 0£¬¹Ø±Õ·äÃùÆ÷£¬1 ´ò¿ª·äÃùÆ÷
- * @return : ÎÞ
+ * @description : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò¿ª»ï¿½ï¿½Ç¹Ø±ï¿½
+ * @param - status : 0ï¿½ï¿½ï¿½Ø±Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1 ï¿½ò¿ª·ï¿½ï¿½ï¿½ï¿½ï¿½
+ * @return : ï¿½ï¿½
  */
 void beep_switch(int status)
 {
     // if (status == ON)
-    //     GPIO5->DR &= ~(1 << 1); /* ´ò¿ª·äÃùÆ÷ */
+    //     GPIO5->DR &= ~(1 << 1); /* ï¿½ò¿ª·ï¿½ï¿½ï¿½ï¿½ï¿½ */
     // else if (status == OFF)
-    //     GPIO5->DR |= (1 << 1); /* ¹Ø±Õ·äÃùÆ÷ */
+    //     GPIO5->DR |= (1 << 1); /* ï¿½Ø±Õ·ï¿½ï¿½ï¿½ï¿½ï¿½ */
     GPIO_PinWrite(GPIO5, 1, status);
 }

@@ -24,7 +24,7 @@ int main()
     {
         led_state = !led_state;
         led_switch(LED0, led_state);
-        delay(500);
+        Delay_ms(1000);
     }
     return 0;
 }
