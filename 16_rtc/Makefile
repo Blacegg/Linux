@@ -1,5 +1,5 @@
 CROSS_COMPILE 	?= arm-linux-gnueabihf-
-TARGET		  	?= lcd
+TARGET		  	?= rtc
 
 CC 				:= $(CROSS_COMPILE)gcc
 LD				:= $(CROSS_COMPILE)ld
@@ -22,7 +22,8 @@ INCDIRS 		:= imx6ul \
 				   bsp/epittimer \
 				   bsp/keyfilter \
 				   bsp/uart \
-				   bsp/lcd
+				   bsp/lcd \
+				   bsp/rtc
 				   			   
 SRCDIRS			:= project \
 				   stdio/lib \
@@ -37,7 +38,8 @@ SRCDIRS			:= project \
 				   bsp/epittimer \
 				   bsp/keyfilter \
 				   bsp/uart \
-				   bsp/lcd
+				   bsp/lcd \
+				   bsp/rtc
 				   
 				   
 INCLUDE			:= $(patsubst %, -I %, $(INCDIRS))

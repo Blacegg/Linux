@@ -1,14 +1,3 @@
-/**************************************************************
-Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
-文件名	: 	 mian.c
-作者	   : 左忠凯
-版本	   : V1.0
-描述	   : I.MX6U开发板裸机实验16 LCD液晶屏实验
-其他	   : 本实验学习如何在I.MX6U上驱动RGB LCD液晶屏幕，I.MX6U有个
- 		 ELCDIF接口，通过此接口可以连接一个RGB LCD液晶屏。
-论坛 	   : www.wtmembed.com
-日志	   : 初版V1.0 2019/1/15 左忠凯创建
-**************************************************************/
 #include "bsp_clk.h"
 #include "bsp_delay.h"
 #include "bsp_led.h"
@@ -17,18 +6,9 @@ Copyright © zuozhongkai Co., Ltd. 1998-2019. All rights reserved.
 #include "bsp_int.h"
 #include "bsp_uart.h"
 #include "stdio.h"
-#include "bsp_lcd.h"
-#include "bsp_lcdapi.h"
+#include "bsp_rtc.h"
 
-
-/* 背景颜色索引 */
-unsigned int backcolor[10] = {
-	LCD_BLUE, 		LCD_GREEN, 		LCD_RED, 	LCD_CYAN, 	LCD_YELLOW, 
-	LCD_LIGHTBLUE, 	LCD_DARKBLUE, 	LCD_WHITE, 	LCD_BLACK, 	LCD_ORANGE
-
-}; 
-	
-
+void ShowMenu();
 /*
  * @description	: main函数
  * @param 		: 无
@@ -36,46 +16,92 @@ unsigned int backcolor[10] = {
  */
 int main(void)
 {
-	unsigned char index = 0;
-	unsigned char state = OFF;
+	int_init();		 /* 初始化中断(一定要最先调用！) */
+	imx6u_clkinit(); /* 初始化系统时钟 			*/
+	delay_init();	 /* 初始化延时 			*/
+	clk_enable();	 /* 使能所有的时钟 			*/
+	led_init();		 /* 初始化led 			*/
+	beep_init();	 /* 初始化beep	 		*/
+	uart_init();	 /* 初始化串口，波特率115200 */
+	RTC_Init();
 
-	int_init(); 				/* 初始化中断(一定要最先调用！) */
-	imx6u_clkinit();			/* 初始化系统时钟 			*/
-	delay_init();				/* 初始化延时 			*/
-	clk_enable();				/* 使能所有的时钟 			*/
-	led_init();					/* 初始化led 			*/
-	beep_init();				/* 初始化beep	 		*/
-	uart_init();				/* 初始化串口，波特率115200 */
-	lcd_init();					/* 初始化LCD 			*/
-
-	tftlcd_dev.forecolor = LCD_RED;	  
-	while(1)				
-	{	
-		lcd_clear(backcolor[index]);
-		delayms(1); 	  
-		lcd_show_string(10, 40, 260, 32, 32,(char*)"ALPHA IMX6U"); 	
-		lcd_show_string(10, 80, 240, 24, 24,(char*)"RGBLCD TEST");
-		lcd_show_string(10, 110, 240, 16, 16,(char*)"ATOM@ALIENTEK");      					 
-		lcd_show_string(10, 130, 240, 12, 12,(char*)"2019/8/14");	      					 
-	    index++;
-		if(index == 10)
-			index = 0;      
-		state = !state;
-		led_switch(LED0,state);
-		delayms(1000);
-
-#if 0
-		index++;
-		if(index == 10)
-			index = 0;
-		lcd_fill(0, 300, 1023, 599, backcolor[index]);
-		lcd_show_string(800,10,240,32,32,(char*)"INDEX=");  /*显示字符串				  */
-		lcd_shownum(896,10, index, 2, 32); 					/* 显示数字，叠加显示	*/
-		
-		state = !state;
-		led_switch(LED0,state);
-		delayms(1000);	/* 延时一秒	*/
-#endif
+	while (1)
+	{
+		unsigned char select = 0;
+		ShowMenu();
+		printf("please input your selection :");
+		scanf("%d", &select);
+		printf("\r\n");
+		switch (select)
+		{
+		case 1:
+			Case_1();
+			break;
+		case 2:
+			Case_2();
+			break;
+		case 3:
+			Case_3();
+			break;
+		default:
+			break;
+		}
 	}
 	return 0;
+}
+
+void ShowMenu()
+{
+	printf("******************************************\r\n");
+	printf("********        1.Set Time        ********\r\n");
+	printf("********        2.Get Time        ********\r\n");
+	printf("********        3.Cycle           ********\r\n");
+	printf("******************************************\r\n");
+}
+
+void Case_1()
+{
+	struct RTC_DateTime datetime;
+	printf("please input year:");
+	scanf("%d", &datetime.year);
+	printf("\r\n");
+	printf("please input month:");
+	scanf("%d", &datetime.month);
+	printf("\r\n");
+	printf("please input day:");
+	scanf("%d", &datetime.day);
+	printf("\r\n");
+	printf("please input hour:");
+	scanf("%d", &datetime.hour);
+	printf("\r\n");
+	printf("please input minute:");
+	scanf("%d", &datetime.minute);
+	printf("\r\n");
+	printf("please input second:");
+	scanf("%d", &datetime.second);
+	printf("\r\n");
+	RTC_SetDateTime(&datetime);
+	printf("Set Time Successful!\r\n");
+}
+
+void Case_2()
+{
+	struct RTC_DateTime datetime;
+	RTC_GetDateTime(&datetime);
+	printf("year:%d\n", datetime.year);
+	printf("month:%d\n", datetime.month);
+	printf("day:%d\n", datetime.day);
+	printf("hour:%d\n", datetime.hour);
+	printf("minute:%d\n", datetime.minute);
+	printf("second:%d\n", datetime.second);
+}
+
+void Case_3()
+{
+	struct RTC_DateTime datetime;
+	while (1)
+	{
+		Case_2();
+		delayms(5000);
+	}
 }
