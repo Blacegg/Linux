@@ -11,6 +11,9 @@
 #include "bsp_i2c.h"
 
 void ShowMenu();
+void Case_1();
+void Case_2();
+void Case_3();
 /*
  * @description	: main函数
  * @param 		: 无
@@ -52,14 +55,15 @@ int main(void)
 			break;
 		}
 	}
+
+	while (ap3216c_init())
+	{
+		state = !state;
+		led_switch(LED0, state);
+		delayms(500);
+	}
 	while (1)
 	{
-		while (ap3216c_init())
-		{
-			state = !state;
-			led_switch(LED0, state);
-			delayms(500);
-		}
 		ap3216c_readdata(&ir, &ps, &als);
 		printf("ir=%d\tps=%d\tals=%d\r\n", ir, ps, als);
 		delayms(500);
@@ -115,7 +119,6 @@ void Case_2()
 
 void Case_3()
 {
-	struct RTC_DateTime datetime;
 	while (1)
 	{
 		Case_2();
