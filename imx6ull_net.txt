@@ -1,0 +1,5 @@
+ethaddr=00:04:9f:04:d2:66
+gatewayip=192.168.10.1
+ipaddr=192.168.10.50
+netmask=255.255.255.0
+serverip=192.168.10.100
